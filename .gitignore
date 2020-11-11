@@ -21,3 +21,5 @@ target/
 *.ipr
 .idea/
 .idea/*
+.idea/misc.xml
+.idea/sso.iml
