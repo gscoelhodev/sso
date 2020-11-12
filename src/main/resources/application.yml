@@ -1,0 +1,18 @@
+#This file will have the variable keys from the git technology to provide
+#the respective and correct initialization of the environment (qa/hml/prd)
+
+#SSO Datasource
+spring.datasource.driver-class-name: org.postgresql.Driver
+spring.datasource.url: jdbc:postgresql://localhost:5432/iam
+spring.datasource.username: postgres
+spring.datasource.password: secret
+
+
+spring.datasource.hikari.maximum-pool-size: 5
+spring.jpa.properties.hibernate.default_schema: public
+spring.jpa.hibernate.ddl-auto: update
+spring.jpa.database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+spring.jpa.show-sql: false
+
+logging.level.org.springframework.web: DEBUG
+logging.level.org.hibernate: ERROR

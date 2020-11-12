@@ -2,7 +2,6 @@ package br.com.security.sso.controller;
 
 /*
 import br.com.intelipost.security.iam.service.AuthorityService;
-import br.com.intelipost.security.iam.service.UserService;
 import br.com.intelipost.security.iam.util.HashGenarator;
 import br.com.intelipost.security.iam.util.MessageSuccess;
 import br.com.security.sso.dto.RefreshTokenRequestDTO;
@@ -10,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 */
 
+import br.com.security.sso.service.UserService;
 import br.com.security.sso.util.Constant;
 import br.com.security.sso.exceptionhandling.BusinessException;
 import br.com.security.sso.exceptionhandling.ResourceNotFoundException;
@@ -54,14 +54,18 @@ public class AuthenticationController extends ApplicationController {
 
 	@Autowired private JwtTokenUtil jwtTokenUtil;
 	@Autowired private JwtUserDetailsService jwtUserDetailsService;
+	@Autowired private UserService userService;
 
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 		validateTokenRequest(authenticationRequest);
 
-		Authentication authentication = authenticate(authenticationRequest.getUsername(),
-			authenticationRequest.getPassword());
 		UserDTO user = getUserDTO(authenticationRequest.getUsername());
+
+		Authentication authentication = authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+
+		if (isNull(authentication) || isNull(authentication.getCredentials()))
+			return generateMessageInvalidCredentials(user);
 
 		final String token = jwtTokenUtil.generateToken(user);
 
@@ -70,14 +74,12 @@ public class AuthenticationController extends ApplicationController {
 		return ResponseEntity.ok(new JwtDTO(token, refreshToken));
 	}
 
-	private Authentication authenticate(String username, String password) {
-		//return userService.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-		return null;
+	private UserDTO getUserDTO(String username) throws BusinessException {
+		return userService.findByUsername(username);
 	}
 
-	private UserDTO getUserDTO(String username) throws BusinessException {
-		//return userService.findByUsername(username);
-		return null;
+	private Authentication authenticate(String username, String password) {
+		return userService.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 	}
 
 	private void validateTokenRequest(JwtRequest authenticationRequest) throws ValidationException {
@@ -92,6 +94,12 @@ public class AuthenticationController extends ApplicationController {
 
 		if (!errorMessages.isEmpty())
 			throw new ValidationException(errorMessages, new Object() {}.getClass().getEnclosingMethod().getName(), AuthenticationController.class.getName());
+	}
+
+	private ResponseEntity<?> generateMessageInvalidCredentials(UserDTO user) {
+		messages = Message.addMessage(null, Message.createMessage(MessageError.ERROR.message, MessageError.INVALID_CREDENTIALS.message, MessageError.INVALID_CREDENTIALS.name()));
+		exceptionResponse = ExceptionResponse.builder().messages(messages).status(MessageError.ERROR.message).originSystem(Constant.ORIGIN_SYSTEM).locale("").time("").timezone("").build();
+		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
 	}
 
 	/*

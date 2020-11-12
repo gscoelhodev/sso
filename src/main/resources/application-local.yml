@@ -1,0 +1,18 @@
+#the respective and correct initialization of the enviroments (local)
+spring.profiles: local
+server.port: 8080
+
+#SSO Datasource
+spring.datasource.driver-class-name: org.postgresql.Driver
+spring.datasource.url: jdbc:postgresql://localhost:5432/iam
+spring.datasource.username: postgres
+spring.datasource.password: secret
+
+spring.datasource.hikari.maximum-pool-size: 5
+spring.jpa.show-sql: true
+spring.jpa.properties.hibernate.default_schema: public
+spring.jpa.hibernate.ddl-auto: update
+spring.jpa.database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+
+logging.level.org.springframework.web: DEBUG
+logging.level.org.hibernate: ERROR
