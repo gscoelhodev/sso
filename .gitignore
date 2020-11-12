@@ -19,8 +19,3 @@ target/
 *.iws
 *.iml
 *.ipr
-.idea/
-.idea/*
-.idea/misc.xml
-.idea/sso.iml
-.idea/**/sso.iml
