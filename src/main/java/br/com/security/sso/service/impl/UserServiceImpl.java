@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO findByUsername(String email) throws BusinessException {
         log.info("method=findByUsername from class={}, message={}", UserServiceImpl.class.getName(), "service operation has started.");
         try {
-            UserDTO userDTO = UserDTO.builder().id(Long.valueOf(1)).email("gscoelho.coelho@gmail.com").build();
+            UserDTO userDTO = UserDTO.builder().id(Long.valueOf(1)).email("gscoelho.coelho@gmail.com").password("12345aA#").build();
             return userDTO;
         } catch (Exception e) {
             messages = new ArrayList<>();

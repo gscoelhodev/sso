@@ -1,8 +1,6 @@
 package br.com.security.sso.config;
 
-import br.com.security.sso.exceptionhandling.Message;
 import br.com.security.sso.exceptionhandling.UnauthorizedException;
-import br.com.security.sso.exceptionhandling.ValidationException;
 import br.com.security.sso.util.MessageError;
 import br.com.security.sso.dto.HeaderDTO;
 import br.com.security.sso.util.Constant;
@@ -11,7 +9,6 @@ import br.com.security.sso.config.properties.JwtYamlProperties;
 import java.io.Serializable;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +31,6 @@ public class JwtTokenUtil implements Serializable {
     @Autowired private JwtYamlProperties jwtYamlProperties;
 
     private static final long serialVersionUID = -2550185165626007488L;
-    private static final String USER = "user";
     private Map<String, Object> claims;
 
     public String getUsernameFromToken(String token) {
@@ -57,7 +53,6 @@ public class JwtTokenUtil implements Serializable {
         return getClaimFromRefreshToken(token, Claims::getSubject);
     }
 
-
     public Date getExpirationDateFromRefreshToken(String token) {
         return getClaimFromRefreshToken(token, Claims::getExpiration);
     }
@@ -68,45 +63,35 @@ public class JwtTokenUtil implements Serializable {
 
     @SneakyThrows
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
-        /*
         final Claims claims = getAllClaimsFromToken(token);
         return claimsResolver.apply(claims);
-         */
-        return null;
     }
 
     @SneakyThrows
     public <T> T getClaimFromRefreshToken(String token, Function<Claims, T> claimsResolver) {
-        /*
         final Claims claims = getAllClaimsFromRefreshToken(token);
         return claimsResolver.apply(claims);
-         */
-        return null;
     }
 
-    /*
     private Claims getAllClaimsFromToken(String token) throws UnauthorizedException {
-     try{
-        return Jwts.parser().setSigningKey(Constant.SECRET).parseClaimsJws(token).getBody();
+        try {
+            return Jwts.parser().setSigningKey(Constant.SECRET).parseClaimsJws(token).getBody();
         } catch (ExpiredJwtException e){
             var errorMessages = new HashMap<String, String>();
-            errorMessages.put(MessageError.AUTHENTICATION_UNDEFINED.name(),
-                MessageError.AUTHENTICATION_UNDEFINED.message);
+            errorMessages.put(MessageError.AUTHENTICATION_UNDEFINED.name(), MessageError.AUTHENTICATION_UNDEFINED.message);
             throw new UnauthorizedException(errorMessages, new Object(){}.getClass().getEnclosingMethod().getName(), JwtTokenUtil.class.getName());
         }
     }
 
     private Claims getAllClaimsFromRefreshToken(String token) throws UnauthorizedException {
     	try {
-          return Jwts.parser().setSigningKey(jwtYamlProperties.getSecretRefreshToken().getBytes()).parseClaimsJws(token).getBody();
+            return Jwts.parser().setSigningKey(jwtYamlProperties.getSecretRefreshToken().getBytes()).parseClaimsJws(token).getBody();
     	} catch (ExpiredJwtException e){
           var errorMessages = new HashMap<String, String>();
-          errorMessages.put(MessageError.AUTHENTICATION_REFRESH_TOKEN_EXPIRED.name(),
-              MessageError.AUTHENTICATION_REFRESH_TOKEN_EXPIRED.message);
+          errorMessages.put(MessageError.AUTHENTICATION_REFRESH_TOKEN_EXPIRED.name(), MessageError.AUTHENTICATION_REFRESH_TOKEN_EXPIRED.message);
           throw new UnauthorizedException(errorMessages, new Object(){}.getClass().getEnclosingMethod().getName(), JwtTokenUtil.class.getName());
-      }
+        }
     }
-    */
 
     private Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
@@ -157,8 +142,7 @@ public class JwtTokenUtil implements Serializable {
 
     @SuppressWarnings("unchecked")
     private Map<String, Object> getHeader(){
-        //return Jwts.header().setType(HeaderDTO.typ);
-        return null;
+        return Jwts.header().setType(HeaderDTO.typ);
     }
 
     private Date expirationToken(){
@@ -178,8 +162,7 @@ public class JwtTokenUtil implements Serializable {
     private Date instantWithTimeZone() {
         ZoneId zoneId = ZoneId.of("America/Sao_Paulo");
         var currentDate = new Date(System.currentTimeMillis());
-        ZonedDateTime currentDateWithZone = ZonedDateTime
-            .ofInstant(currentDate.toInstant(), zoneId);
+        ZonedDateTime currentDateWithZone = ZonedDateTime.ofInstant(currentDate.toInstant(), zoneId);
         return Date.from(currentDateWithZone.toInstant());
     }
 
