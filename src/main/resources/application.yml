@@ -7,7 +7,6 @@ spring.datasource.url: jdbc:postgresql://localhost:5432/iam
 spring.datasource.username: postgres
 spring.datasource.password: secret
 
-
 spring.datasource.hikari.maximum-pool-size: 5
 spring.jpa.properties.hibernate.default_schema: public
 spring.jpa.hibernate.ddl-auto: update
@@ -19,3 +18,24 @@ logging.level.org.hibernate: ERROR
 
 jwt.secret: ${JWT_SECRET}
 jwt.secret-refresh-token: ${REFRESH_TOKEN_SECRET}
+
+#LDAP
+spring:
+  application:
+    name: "sso"
+  main:
+    allow-bean-definition-overriding: true
+  ldap:
+    base: dc=workspace,dc=com
+    urls: ldap://localhost:389
+    username: uid=user
+    password: password
+    embedded:
+      base-dn: dc=workspace,dc=com
+      credential:
+        username: uid=user
+        password: password
+      ldif: classpath:schema.ldif
+      #port: 389 TODO: Precisa habilitar no Ubuntu a porta 389 e talvez também a porta 636 [SSL]
+      validation:
+        enabled: false

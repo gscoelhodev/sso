@@ -80,8 +80,15 @@
 		<dependency>
 			<groupId>com.unboundid</groupId>
 			<artifactId>unboundid-ldapsdk</artifactId>
+			<version>5.0.1</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-ldap</artifactId>
+		</dependency>
+
+		<!--
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-ldap</artifactId>
@@ -96,6 +103,7 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-ldap</artifactId>
 		</dependency>
+		-->
 
 		<!-- Remove it just in case it's unused -->
 		<dependency>

@@ -1,0 +1,35 @@
+dn: dc=workspace,dc=com
+objectclass: top
+objectclass: domain
+objectclass: extensibleObject
+dc: workspace
+
+dn: ou=users,dc=workspace,dc=com
+objectclass: top
+objectclass: organizationalUnit
+ou: users
+
+#Users
+dn: uid=workspace,ou=users,dc=workspace,dc=com
+objectclass: top
+objectclass: user
+objectclass: organizationalUsers
+objectclass: inetOrgUser
+cn: Gustavo Coelho
+sn: Coelho
+uid: workspace
+mail: gscoelho.coelho@gmail.com
+locked: 0
+group: cn=Admin,ou=groups,dc=workspace,dc=com
+userPassword: 12345aA#
+
+dn: ou=groups,dc=workspace,dc=com
+objectclass: top
+ou: groups
+
+#Groups
+dn: cn=Admin,ou=groups,dc=workspace,dc=com
+objectclass: top
+objectclass: group
+cn: Admin
+ou: Admin

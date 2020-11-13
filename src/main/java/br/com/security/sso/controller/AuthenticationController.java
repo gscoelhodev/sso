@@ -2,6 +2,8 @@ package br.com.security.sso.controller;
 
 import br.com.security.sso.dto.JwtRequest;
 import br.com.security.sso.dto.RefreshTokenRequestDTO;
+import br.com.security.sso.model.ApplicativeUser;
+import br.com.security.sso.service.AuthenticationService;
 import br.com.security.sso.service.UserService;
 import br.com.security.sso.util.Constant;
 import br.com.security.sso.exceptionhandling.BusinessException;
@@ -40,6 +42,7 @@ public class AuthenticationController extends ApplicationController {
 	@Autowired private JwtTokenUtil jwtTokenUtil;
 	@Autowired private JwtUserDetailsService jwtUserDetailsService;
 	@Autowired private UserService userService;
+	@Autowired private AuthenticationService authenticationService;
 
 	@PostMapping("/authenticate")
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
@@ -48,6 +51,8 @@ public class AuthenticationController extends ApplicationController {
 		Authentication authentication = authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 		if (isNull(authentication) || isNull(authentication.getCredentials()))
 			return generateMessageInvalidCredentials(user);
+
+		ApplicativeUser applicativeUser = authenticationService.authenticateUser(authenticationRequest.getUsername(), authenticationRequest.getPassword(), Constant.ORIGIN_SYSTEM);
 
 		final String token = jwtTokenUtil.generateToken(user);
 		final String refreshToken = jwtTokenUtil.generateRefreshToken(user);
