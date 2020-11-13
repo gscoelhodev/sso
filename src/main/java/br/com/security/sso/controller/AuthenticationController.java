@@ -1,5 +1,6 @@
 package br.com.security.sso.controller;
 
+import br.com.security.sso.dto.JwtRequest;
 import br.com.security.sso.dto.RefreshTokenRequestDTO;
 import br.com.security.sso.service.UserService;
 import br.com.security.sso.util.Constant;
@@ -9,7 +10,6 @@ import br.com.security.sso.util.MessageError;
 import br.com.security.sso.exceptionhandling.ExceptionResponse;
 import br.com.security.sso.exceptionhandling.Message;
 import br.com.security.sso.service.JwtUserDetailsService;
-import br.com.security.sso.model.JwtRequest;
 import br.com.security.sso.dto.UserDTO;
 import br.com.security.sso.dto.JwtDTO;
 import br.com.security.sso.config.JwtTokenUtil;
