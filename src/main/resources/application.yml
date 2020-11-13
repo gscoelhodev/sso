@@ -27,7 +27,7 @@ spring:
     allow-bean-definition-overriding: true
   ldap:
     base: dc=workspace,dc=com
-    urls: ldap://localhost:389
+    urls: ldap://localhost:8389
     username: uid=user
     password: password
     embedded:
@@ -36,6 +36,6 @@ spring:
         username: uid=user
         password: password
       ldif: classpath:schema.ldif
-      #port: 389 TODO: Precisa habilitar no Ubuntu a porta 389 e talvez também a porta 636 [SSL]
+      port: 8389
       validation:
         enabled: false
