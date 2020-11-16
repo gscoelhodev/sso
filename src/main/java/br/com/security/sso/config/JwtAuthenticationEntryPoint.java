@@ -1,6 +1,7 @@
 package br.com.security.sso.config;
 
-//import br.com.intelipost.security.iam.util.Constant;
+import br.com.security.sso.util.Constant;
+import br.com.security.sso.util.MessageError;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.Serializable;
@@ -9,10 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-//import br.com.intelipost.security.iam.util.MessageError;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
+import static java.util.Objects.isNull;
 
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Serializable {
@@ -27,13 +28,17 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
         var response = new HashMap<String, Object>();
         var messages = new HashMap<String, Object>();
         response.put("time", System.currentTimeMillis()+" ms");
-        //response.put("originSystem", Constant.ORIGIN_SYSTEM);
+        response.put("originSystem", Constant.ORIGIN_SYSTEM);
         response.put("timezone", "");
         response.put("locale", "");
 
         messages.put("type", "WARNING");
-        //messages.put("text", MessageError.AUTHENTICATION_UNDEFINED.message);
-        //messages.put("key", MessageError.AUTHENTICATION_UNDEFINED.name());
+        if(!isNull(authException.getMessage()))
+            messages.put("text", authException.getMessage());
+        else
+            messages.put("text", MessageError.AUTHENTICATION_UNDEFINED.message);
+
+        messages.put("key", MessageError.AUTHENTICATION_UNDEFINED.name());
         List<HashMap<String, Object>> messagesList = new ArrayList<>();
         messagesList.add(messages);
         response.put("messages", messagesList);

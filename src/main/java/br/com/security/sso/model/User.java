@@ -26,16 +26,18 @@ public class User implements Serializable {
     @Attribute(name = "uid")
     private String login;
 
-    @Attribute(name = "mail")
-    private String email;
+    @Attribute(name = "cn")
+    private String commonName;
 
     @Attribute(name = "sn")
     private String surName;
 
     @Attribute(name = "group")
-    private Name groupDn;
+    private Name groupDn; //Distinguish Name
 
     @Transient
     private Group group;
+
+    private Boolean enabled;
 
 }

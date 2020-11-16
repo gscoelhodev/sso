@@ -19,30 +19,26 @@ import java.util.List;
 @Builder
 @JsonDeserialize
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApplicativeUser implements Serializable, UserDetails {
+public class UserApplication implements Serializable, UserDetails {
 
     private static final long serialVersionUID = -2024675991223445582L;
 
     private String username;
 
-    private String email;
-
     @JsonIgnore
     private String password;
 
-    private boolean degrade;
+    private String firstName;
 
-    private String job;
-
-    private String perId;
-
-    private String login;
+    private String lastName;
 
     private Group group;
 
-    private String firstName;
+    private Boolean enabled;
 
-    private String surName;
+    @JsonIgnore
+    @Override
+    public boolean isEnabled() { return getEnabled(); }
 
     @JsonIgnore
     @Override
@@ -55,10 +51,6 @@ public class ApplicativeUser implements Serializable, UserDetails {
     @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() { return true; }
-
-    @JsonIgnore
-    @Override
-    public boolean isEnabled() { return true; }
 
     @JsonIgnore
     @Override

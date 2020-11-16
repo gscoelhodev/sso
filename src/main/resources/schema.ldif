@@ -9,20 +9,6 @@ objectclass: top
 objectclass: organizationalUnit
 ou: users
 
-#Users
-dn: uid=sso,ou=users,dc=sso,dc=security,dc=com,dc=br
-objectclass: top
-objectclass: user
-objectclass: organizationalUsers
-objectclass: inetOrgUser
-cn: Gustavo Coelho
-sn: Coelho
-uid: sso
-mail: gscoelho.coelho@gmail.com
-locked: 0
-group: cn=Admin,ou=groups,dc=sso,dc=security,dc=com,dc=br
-userPassword: 12345aA#
-
 dn: ou=groups,dc=sso,dc=security,dc=com,dc=br
 objectclass: top
 ou: groups
@@ -33,3 +19,16 @@ objectclass: top
 objectclass: group
 cn: Admin
 ou: Admin
+
+#Users
+dn: uid=Single Sigh On,ou=users,dc=sso,dc=security,dc=com,dc=br
+objectclass: top
+objectclass: user
+objectclass: organizationalUsers
+objectclass: inetOrgUser
+cn: Gustavo
+sn: Coelho
+uid: gscoelho.coelho@gmail.com
+enabled: 1
+group: cn=Admin,ou=groups,dc=sso,dc=security,dc=com,dc=br
+userPassword: 12345aA#

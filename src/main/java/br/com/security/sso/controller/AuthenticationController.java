@@ -2,7 +2,7 @@ package br.com.security.sso.controller;
 
 import br.com.security.sso.dto.JwtRequest;
 import br.com.security.sso.dto.RefreshTokenRequestDTO;
-import br.com.security.sso.model.ApplicativeUser;
+import br.com.security.sso.model.UserApplication;
 import br.com.security.sso.service.AuthenticationService;
 import br.com.security.sso.service.UserService;
 import br.com.security.sso.util.Constant;
@@ -52,7 +52,7 @@ public class AuthenticationController extends ApplicationController {
 		if (isNull(authentication) || isNull(authentication.getCredentials()))
 			return generateMessageInvalidCredentials(user);
 
-		ApplicativeUser applicativeUser = authenticationService.authenticateUser(authenticationRequest.getUsername(), authenticationRequest.getPassword(), Constant.ORIGIN_SYSTEM);
+		UserApplication userApplication = authenticationService.authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword(), Constant.ORIGIN_SYSTEM);
 
 		final String token = jwtTokenUtil.generateToken(user);
 		final String refreshToken = jwtTokenUtil.generateRefreshToken(user);

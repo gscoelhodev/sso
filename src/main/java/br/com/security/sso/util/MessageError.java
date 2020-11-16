@@ -4,12 +4,14 @@ public enum MessageError  {
 
     //User
     USER_NOT_FOUND("User not found"),
+    USER_DISABLED("User disabled"),
 
     //Auth
-    AUTHENTICATION_REQUIRED("Usuário não autenticado para realizar a operação"),
-    AUTHENTICATION_REFRESH_TOKEN_EXPIRED("Expired Refresh token "),
+    AUTHENTICATION_REQUIRED("Authentication required to perform this operation"),
+    AUTHENTICATION_REFRESH_TOKEN_EXPIRED("Expired Refresh token"),
     AUTHENTICATION_UNDEFINED("Authentication undefined due to authorization requirements"),
     AUTHENTICATION_NOT_PERMISSION("You are not allowed to perform this action."),
+    AUTHENTICATION_FAILED("Authentication failed. Please check your login or password"),
     
     //General error
     ERROR("ERROR"),
