@@ -15,7 +15,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entry(base = "ou=users,dc=workspace,dc=com", objectClasses = { "user" })
+@Entry(base = "ou=users,dc=sso,dc=security,dc=com,dc=br", objectClasses = { "user" })
 public class User implements Serializable {
 
 	private static final long serialVersionUID = -1024678991226448571L;

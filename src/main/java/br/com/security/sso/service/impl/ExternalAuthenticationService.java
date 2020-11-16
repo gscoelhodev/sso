@@ -28,7 +28,7 @@ public class ExternalAuthenticationService implements AuthenticationService {
     @Override
     public ApplicativeUser authenticateUser(String username, String password, String appName) throws BusinessException {
         try {
-            User user = userRepository.findByLogin(username);
+            final User user = userRepository.findByLogin(username);
 
             boolean authenticate = ldapTemplate.authenticate(user.getId(), "(uid=" + username + ")", password);
             if (!authenticate)

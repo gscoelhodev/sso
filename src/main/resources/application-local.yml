@@ -27,12 +27,12 @@ spring:
   main:
     allow-bean-definition-overriding: true
   ldap:
-    base: dc=workspace,dc=com
+    base: dc=sso,dc=security,dc=com,dc=br
     urls: ldap://localhost:8389
     username: uid=user
     password: password
     embedded:
-      base-dn: dc=workspace,dc=com
+      base-dn: dc=sso,dc=security,dc=com,dc=br
       credential:
         username: uid=user
         password: password
