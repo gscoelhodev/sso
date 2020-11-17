@@ -6,13 +6,11 @@ import br.com.security.sso.model.UserApplication;
 import br.com.security.sso.service.AuthenticationService;
 import br.com.security.sso.service.UserService;
 import br.com.security.sso.util.Constant;
-import br.com.security.sso.exceptionhandling.BusinessException;
 import br.com.security.sso.exceptionhandling.ValidationException;
 import br.com.security.sso.util.MessageError;
 import br.com.security.sso.exceptionhandling.ExceptionResponse;
 import br.com.security.sso.exceptionhandling.Message;
 import br.com.security.sso.service.JwtUserDetailsService;
-import br.com.security.sso.dto.UserDTO;
 import br.com.security.sso.dto.JwtDTO;
 import br.com.security.sso.config.JwtTokenUtil;
 import java.util.List;
@@ -47,44 +45,20 @@ public class AuthenticationController extends ApplicationController {
 	@PostMapping("/authenticate")
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 		validateTokenRequest(authenticationRequest);
-		UserDTO user = getUserDTO(authenticationRequest.getUsername());
-		Authentication authentication = authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+
+		UserApplication userApplication = authenticationService.authenticateOnLDAP(authenticationRequest.getUsername(), authenticationRequest.getPassword(), Constant.ORIGIN_SYSTEM);
+
+		if (isNull(userApplication))
+			return generateMessageInvalidCredentials();
+
+		Authentication authentication = authenticationService.obtainIAMCredentials(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
+
+		//TODO: Set Authorities on userApplication from Credentials in authentication object
+
 		if (isNull(authentication) || isNull(authentication.getCredentials()))
-			return generateMessageInvalidCredentials(user);
+			return generateMessageInvalidCredentials();
 
-		UserApplication userApplication = authenticationService.authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword(), Constant.ORIGIN_SYSTEM);
-
-		final String token = jwtTokenUtil.generateToken(user);
-		final String refreshToken = jwtTokenUtil.generateRefreshToken(user);
-		return ResponseEntity.ok(new JwtDTO(token, refreshToken));
-	}
-
-	private UserDTO getUserDTO(String username) throws BusinessException {
-		return userService.findByUsername(username);
-	}
-
-	private Authentication authenticate(String username, String password) {
-		return userService.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-	}
-
-	private void validateTokenRequest(JwtRequest authenticationRequest) throws ValidationException {
-		errorMessages = new HashMap<>();
-
-		if (authenticationRequest.getUsername() == null)
-			errorMessages.put(MessageError.USERNAME_INVALID.name(), MessageError.USERNAME_INVALID.message);
-
-		if (authenticationRequest.getPassword() == null) {
-			errorMessages.put(MessageError.PASSWORD_INVALID.name(), MessageError.PASSWORD_INVALID.message);
-		}
-
-		if (!errorMessages.isEmpty())
-			throw new ValidationException(errorMessages, new Object() {}.getClass().getEnclosingMethod().getName(), AuthenticationController.class.getName());
-	}
-
-	private ResponseEntity<?> generateMessageInvalidCredentials(UserDTO user) {
-		messages = Message.addMessage(null, Message.createMessage(MessageError.ERROR.message, MessageError.INVALID_CREDENTIALS.message, MessageError.INVALID_CREDENTIALS.name()));
-		exceptionResponse = ExceptionResponse.builder().messages(messages).status(MessageError.ERROR.message).originSystem(Constant.ORIGIN_SYSTEM).locale("").time("").timezone("").build();
-		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+		return ResponseEntity.ok(generateTokens(authenticationRequest));
 	}
 
 	@PostMapping("/refresh-token")
@@ -102,11 +76,36 @@ public class AuthenticationController extends ApplicationController {
 		if (!jwtTokenUtil.validateRefreshToken(refreshTokenRequest.getRefreshToken(), userDetails))
 			throw new ValidationException(errorMessages, new Object() {}.getClass().getEnclosingMethod().getName(), AuthenticationController.class.getName());
 
-		UserDTO user = getUserDTO(username);
-		final String token = jwtTokenUtil.generateToken(user);
-		final String refreshToken = jwtTokenUtil.generateRefreshToken(user);
+		final String token = jwtTokenUtil.generateToken(username);
+		final String refreshToken = jwtTokenUtil.generateRefreshToken(username);
 
 		return ResponseEntity.ok(new JwtDTO(token, refreshToken));
+	}
+
+	private JwtDTO generateTokens(JwtRequest authenticationRequest) {
+		final String token = jwtTokenUtil.generateToken(authenticationRequest.getUsername());
+		final String refreshToken = jwtTokenUtil.generateRefreshToken(authenticationRequest.getUsername());
+		return new JwtDTO(token, refreshToken);
+	}
+
+	private void validateTokenRequest(JwtRequest authenticationRequest) throws ValidationException {
+		errorMessages = new HashMap<>();
+
+		if (authenticationRequest.getUsername() == null)
+			errorMessages.put(MessageError.USERNAME_INVALID.name(), MessageError.USERNAME_INVALID.message);
+
+		if (authenticationRequest.getPassword() == null) {
+			errorMessages.put(MessageError.PASSWORD_INVALID.name(), MessageError.PASSWORD_INVALID.message);
+		}
+
+		if (!errorMessages.isEmpty())
+			throw new ValidationException(errorMessages, new Object() {}.getClass().getEnclosingMethod().getName(), AuthenticationController.class.getName());
+	}
+
+	private ResponseEntity<?> generateMessageInvalidCredentials() {
+		messages = Message.addMessage(null, Message.createMessage(MessageError.ERROR.message, MessageError.INVALID_CREDENTIALS.message, MessageError.INVALID_CREDENTIALS.name()));
+		exceptionResponse = ExceptionResponse.builder().messages(messages).status(MessageError.ERROR.message).originSystem(Constant.ORIGIN_SYSTEM).locale("").time("").timezone("").build();
+		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
 	}
 
 	private void validateRefreshTokenRequest(RefreshTokenRequestDTO refreshTokenRequestDTO) {

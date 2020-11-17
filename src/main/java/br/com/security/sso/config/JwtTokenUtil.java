@@ -4,7 +4,6 @@ import br.com.security.sso.exceptionhandling.UnauthorizedException;
 import br.com.security.sso.util.MessageError;
 import br.com.security.sso.dto.HeaderDTO;
 import br.com.security.sso.util.Constant;
-import br.com.security.sso.dto.UserDTO;
 import br.com.security.sso.config.properties.JwtYamlProperties;
 import java.io.Serializable;
 import java.time.ZoneId;
@@ -103,23 +102,23 @@ public class JwtTokenUtil implements Serializable {
         return expiration.before(instantWithTimeZone());
     }
 
-    public String generateToken(UserDTO user) {
+    public String generateToken(String userName) {
         claims = new HashMap<>();
 
         return Jwts.builder().setClaims(claims)
             .setHeader(getHeader())
-            .setSubject(user.getEmail())
+            .setSubject(userName)
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(expirationToken())
             .signWith(HeaderDTO.alg, Constant.SECRET)
             .compact();
     }
 
-    public String generateRefreshToken(UserDTO user) {
+    public String generateRefreshToken(String userName) {
         claims = new HashMap<>();
         return Jwts.builder().setClaims(claims)
             .setHeader(getHeader())
-            .setSubject(user.getEmail())
+            .setSubject(userName)
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(expirationRefreshToken())
             .signWith(HeaderDTO.alg, jwtYamlProperties.getSecretRefreshToken().getBytes())

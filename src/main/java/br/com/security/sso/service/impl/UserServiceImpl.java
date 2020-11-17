@@ -42,7 +42,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Authentication authenticate(Authentication auth) throws AuthenticationException {
-        Authentication authentication = null;
+        return obtainIAMCredentials(auth);
+    }
+
+    //TODO: Change the body method and integrate with Redis in order to retrive user credentials from IAM searching by user email
+    private Authentication obtainIAMCredentials(Authentication auth) throws AuthenticationException {
+        Authentication authentication;
         String username = auth.getName();
         String password = auth.getCredentials().toString();
 
@@ -58,11 +63,10 @@ public class UserServiceImpl implements UserService {
             } else
                 throw new UsernameNotFoundException(MessageError.INVALID_CREDENTIALS.message);
 
+            return authentication;
         } catch (BusinessException e){
             throw new BadCredentialsException(MessageError.INVALID_CREDENTIALS.message);
         }
-
-        return authentication;
     }
 
     @Override
