@@ -14,6 +14,7 @@ import br.com.security.sso.service.JwtUserDetailsService;
 import br.com.security.sso.dto.JwtDTO;
 import br.com.security.sso.config.JwtTokenUtil;
 import java.util.List;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ import static java.util.Objects.isNull;
 
 @RequestMapping(Constant.API_VERSION)
 @RestController
-//@Api(tags = "AUTH 0.1")
+@Api(tags = "AUTH 0.1")
 public class AuthenticationController extends ApplicationController {
 
 	private Map<String, String> errorMessages;
