@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +43,11 @@ public class AuthenticationController extends ApplicationController {
 	@Autowired private JwtUserDetailsService jwtUserDetailsService;
 	@Autowired private UserService userService;
 	@Autowired private AuthenticationService authenticationService;
+
+	@GetMapping("/teste")
+	public ResponseEntity<?> teste() throws Exception {
+		return null;
+	}
 
 	@PostMapping("/authenticate")
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {

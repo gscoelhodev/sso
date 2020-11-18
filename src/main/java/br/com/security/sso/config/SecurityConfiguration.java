@@ -51,6 +51,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+        //Oauth2 Authentication
+        httpSecurity
+                .antMatcher("/**")
+                .authorizeRequests()
+                .antMatchers("/")
+                .permitAll()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .oauth2Login(); //-- Use it for Google login integrated with Spring Security
+
+        /*
         httpSecurity
         .cors().and().csrf().disable()
         .authorizeRequests().antMatchers(Constant.API_VERSION + "/authenticate").permitAll()
@@ -67,6 +79,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        */
     }
 
     @Bean
