@@ -51,21 +51,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        //Oauth2 Authentication
-        httpSecurity
-                .antMatcher("/**")
-                .authorizeRequests()
-                .antMatchers("/")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .oauth2Login(); //-- Use it for Google login integrated with Spring Security
-
-        /*
         httpSecurity
         .cors().and().csrf().disable()
-        .authorizeRequests().antMatchers(Constant.API_VERSION + "/authenticate").permitAll()
+        .antMatcher("/**")
+        .authorizeRequests().antMatchers("/").permitAll()
+        .and().authorizeRequests().antMatchers(Constant.API_VERSION + "/authenticate").permitAll()
         .and().authorizeRequests().antMatchers(Constant.API_VERSION + "/refresh-token").permitAll()
         .and().authorizeRequests().antMatchers("/webjars/**").permitAll()
         .and().authorizeRequests().antMatchers("/actuator/**").permitAll()
@@ -74,12 +64,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .and().authorizeRequests().antMatchers("/v2/api-docs/**").permitAll()
         .anyRequest().authenticated().and()
         .exceptionHandling().accessDeniedHandler(accessDeniedHandler()).and()
-        .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and() //Activate the commence method and identifys Google Authentication requirement
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+        .oauth2Login(); //-- Use it for Google login integrated with Spring Security
 
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-        */
     }
 
     @Bean

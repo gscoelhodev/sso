@@ -12,7 +12,8 @@ public enum MessageError  {
     AUTHENTICATION_UNDEFINED("Authentication undefined due to authorization requirements"),
     AUTHENTICATION_NOT_PERMISSION("You are not allowed to perform this action."),
     AUTHENTICATION_FAILED("Authentication failed. Please check your login or password"),
-    
+    AUTHENTICATION_REQUIRED_GOOGLE_OAUTH2("Full authentication is required to access this resource"),
+
     //General error
     ERROR("ERROR"),
     WARNING("WARNING"),
