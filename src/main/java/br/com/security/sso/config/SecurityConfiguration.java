@@ -64,7 +64,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .and().authorizeRequests().antMatchers("/v2/api-docs/**").permitAll()
         .anyRequest().authenticated().and()
         .exceptionHandling().accessDeniedHandler(accessDeniedHandler()).and()
-        .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and() //Activate the commence method and identifys Google Authentication requirement
+        .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and() //Remove this to activate Google Authentication from Google form login
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
         .oauth2Login(); //-- Use it for Google login integrated with Spring Security
 
